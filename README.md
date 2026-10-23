@@ -1,6 +1,12 @@
 # Crop Disease Detection 🌿🔍
 ### AI Plant Leaf Pathology Analyzer & Educational Agronomic Guide
 
+[![Render Deployment](https://img.shields.io/badge/Render-Deployed%20Live-brightgreen?logo=render&style=flat-square)](https://crop-disease-detection-ohs0.onrender.com)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-pillipakapranav--star%2FCROP--DISEASE-blue?logo=github&style=flat-square)](https://github.com/pillipakapranav-star/CROP-DISEASE)
+
+🌐 **Live Web Application**: [https://crop-disease-detection-ohs0.onrender.com](https://crop-disease-detection-ohs0.onrender.com)
+
+
 A modern, responsive web application for diagnosing agricultural plant diseases from leaf photographs. Users can upload high-resolution leaf images or capture specimens live via their device camera to receive instant pathology classifications, probabilistic confidence scores, and structured educational prevention guidelines.
 
 ---
