@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crop Disease Detection | AI Plant Leaf Health & Pathology Analyzer</title>
+  <meta name="description" content="AI-powered crop disease detection. Upload or capture photos of plant leaves for instant pathology diagnosis, confidence scores, and educational prevention guidance." />
+  <meta name="theme-color" content="#0d1512" />
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app" class="app-root">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-inner container">
+        <div class="brand">
+          <div class="brand-icon-wrapper">
+            <i data-lucide="sprout" class="brand-icon"></i>
+            <span class="brand-pulse"></span>
+          </div>
+          <div class="brand-text">
+            <h1 class="brand-title">Crop Disease Detection</h1>
+            <span class="brand-subtitle">AI Leaf Pathology Analyzer & Educational Guide</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="main-nav" aria-label="Main Navigation">
+          <button class="nav-tab active" data-tab="diagnose" id="nav-diagnose">
+            <i data-lucide="scan-line" class="nav-icon"></i>
+            <span>Diagnose</span>
+          </button>
+          <button class="nav-tab" data-tab="samples" id="nav-samples">
+            <i data-lucide="image" class="nav-icon"></i>
+            <span>Demo Gallery</span>
+          </button>
+          <button class="nav-tab" data-tab="library" id="nav-library">
+            <i data-lucide="book-open" class="nav-icon"></i>
+            <span>Disease Library</span>
+          </button>
+          <button class="nav-tab" data-tab="history" id="nav-history">
+            <i data-lucide="history" class="nav-icon"></i>
+            <span>Scan History</span>
+            <span class="badge-count" id="history-badge-count">0</span>
+          </button>
+        </nav>
+
+        <!-- Header Controls -->
+        <div class="header-actions">
+          <!-- Model Engine Switcher -->
+          <div class="engine-badge" id="engine-selector-btn" title="Current Neural Inference Engine">
+            <i data-lucide="cpu" class="engine-icon"></i>
+            <span id="active-engine-label">Demo Heuristic v2.4</span>
+          </div>
+
+          <!-- Sound Toggle -->
+          <button class="icon-btn" id="sound-toggle-btn" aria-label="Toggle Sound Effects" title="Toggle Sound Feedback">
+            <i data-lucide="volume-2" id="sound-icon"></i>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="icon-btn" id="theme-toggle-btn" aria-label="Toggle Light/Dark Theme" title="Toggle Theme">
+            <i data-lucide="sun" id="theme-icon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Educational Banner -->
+    <div class="education-top-bar">
+      <div class="container education-bar-content">
+        <i data-lucide="info" class="alert-icon-sm"></i>
+        <span><strong>Educational Guidance Only:</strong> Diagnostic predictions and prevention tips are provided for learning and awareness. Always verify with certified agricultural extension agents.</span>
+      </div>
+    </div>
+
+    <!-- Main Content Stage -->
+    <main class="container main-container">
+
+      <!-- ================= TAB 1: DIAGNOSE ================= -->
+      <section id="tab-diagnose" class="tab-content active">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-text">
+            <h2>Instant Plant Pathology Inspection</h2>
+            <p>Upload a high-resolution photo or capture a plant leaf using your camera. Our computer vision engine analyzes leaf morphology, discoloration, and fungal patterns.</p>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-pill">
+              <span class="stat-num">5</span>
+              <span class="stat-label">Crops Supported</span>
+            </div>
+            <div class="stat-pill">
+              <span class="stat-num">6+</span>
+              <span class="stat-label">Pathology Profiles</span>
+            </div>
+            <div class="stat-pill highlight">
+              <span class="stat-num">&lt; 1s</span>
+              <span class="stat-label">Inference Speed</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagnostic Workspace Grid -->
+        <div class="diagnostic-grid">
+          
+          <!-- Left Column: Input & Capture Studio -->
+          <div class="panel studio-panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <i data-lucide="camera" class="panel-icon"></i>
+                <h3 class="panel-title">Leaf Input Studio</h3>
+              </div>
+              <span class="supported-tag">JPEG, PNG, WebP</span>
+            </div>
+
+            <div class="panel-body">
+              <!-- Upload Dropzone Area -->
+              <div class="dropzone-container" id="dropzone">
+                <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" class="visually-hidden" />
+                
+                <!-- Idle State UI -->
+                <div class="dropzone-idle" id="dropzone-idle">
+                  <div class="dropzone-graphic">
+                    <i data-lucide="leaf" class="leaf-glow-icon"></i>
+                    <i data-lucide="upload-cloud" class="upload-indicator"></i>
+                  </div>
+                  <h4>Drag & Drop Leaf Photograph</h4>
+                  <p>or choose an input method below</p>
+                  
+                  <div class="input-actions-row">
+                    <button type="button" class="btn btn-primary" id="btn-browse-file">
+                      <i data-lucide="folder-open"></i>
+                      <span>Browse Photo</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btn-open-camera">
+                      <i data-lucide="camera"></i>
+                      <span>Live Camera</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Preview State UI -->
+                <div class="dropzone-preview hidden" id="dropzone-preview">
+                  <div class="image-stage">
+                    <img id="preview-image" alt="Uploaded plant leaf" />
+                    
+                    <!-- Animated Holographic Scan Beam -->
+                    <div class="scanner-bar hidden" id="scanner-bar"></div>
+                    
+                    <!-- Scan Reticle Grid Overlay -->
+                    <div class="scanner-grid hidden" id="scanner-grid">
+                      <div class="reticle-corner tl"></div>
+                      <div class="reticle-corner tr"></div>
+                      <div class="reticle-corner bl"></div>
+                      <div class="reticle-corner br"></div>
+                    </div>
+                  </div>
+
+                  <div class="preview-footer">
+                    <div class="preview-meta">
+                      <span id="preview-filename">leaf-photo.jpg</span>
+                      <span id="preview-resolution" class="meta-tag">0×0</span>
+                    </div>
+                    <div class="preview-btn-group">
+                      <button type="button" class="btn btn-sm btn-outline" id="btn-retest-leaf" title="Re-analyze this image">
+                        <i data-lucide="refresh-cw"></i>
+                        <span>Re-analyze</span>
+                      </button>
+                      <button type="button" class="btn btn-sm btn-ghost" id="btn-clear-preview" title="Remove image">
+                        <i data-lucide="trash-2"></i>
+                        <span>Clear</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Scanning Progress Overlay -->
+                <div class="scanning-overlay hidden" id="scanning-overlay">
+                  <div class="scanner-spinner">
+                    <i data-lucide="loader-2" class="spin-icon"></i>
+                  </div>
+                  <h4 id="scan-stage-text">Analyzing leaf histology...</h4>
+                  <div class="progress-track">
+                    <div class="progress-fill" id="scan-progress-bar" style="width: 15%"></div>
+                  </div>
+                  <span class="scan-subtext">Evaluating fungal lesion patterns & chlorophyll density</span>
+                </div>
+              </div>
+
+              <!-- Quality Metrics Inspector -->
+              <div class="quality-card hidden" id="quality-card">
+                <div class="quality-header">
+                  <span class="quality-label"><i data-lucide="sparkles"></i> Image Quality Verification</span>
+                  <span class="badge" id="quality-status-badge">Verified</span>
+                </div>
+                <div class="metrics-grid">
+                  <div class="metric-item">
+                    <span class="metric-title">Sharpness Score</span>
+                    <span class="metric-val" id="metric-sharpness">--</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-title">Vegetation Index</span>
+                    <span class="metric-val" id="metric-vegetation">--</span>
+                  </div>
+                  <div class="metric-item">
+                    <span class="metric-title">Diagnostic Grade</span>
+                    <span class="metric-val" id="metric-grade">Good</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Demo Switcher Prompt -->
+              <div class="quick-demo-prompt">
+                <i data-lucide="lightbulb" class="prompt-icon"></i>
+                <span>Want to test immediately? <a href="#" id="link-try-samples">Load sample leaf photos</a> or <a href="#" id="link-test-errors">test error rejection</a>.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Diagnostic Intelligence & Prevention Guidance -->
+          <div class="panel results-panel" id="results-panel">
+            <div class="panel-header">
+              <div class="panel-title-group">
+                <i data-lucide="activity" class="panel-icon"></i>
+                <h3 class="panel-title">Diagnostic Results</h3>
+              </div>
+              <span class="badge badge-neutral" id="results-engine-tag">Awaiting Image</span>
+            </div>
+
+            <div class="panel-body">
+              
+              <!-- Blank State -->
+              <div class="results-empty-state" id="results-empty">
+                <div class="empty-illustration">
+                  <i data-lucide="flask-conical" class="flask-icon"></i>
+                </div>
+                <h4>No Diagnosis Yet</h4>
+                <p>Upload a clear photo of a crop leaf or select a specimen from the Demo Gallery to generate AI pathology analysis and prevention recommendations.</p>
+                <button type="button" class="btn btn-outline" id="btn-empty-demo">
+                  <i data-lucide="zap"></i>
+                  <span>Test Sample Tomato Leaf</span>
+                </button>
+              </div>
+
+              <!-- Quality Error / Rejection State -->
+              <div class="quality-error-state hidden" id="quality-error-box">
+                <div class="error-banner">
+                  <div class="error-icon-box">
+                    <i data-lucide="alert-triangle" class="error-icon"></i>
+                  </div>
+                  <div class="error-text">
+                    <h4 id="error-title">Image Quality Rejection</h4>
+                    <p id="error-message">The image is too blurry or out of focus.</p>
+                  </div>
+                </div>
+
+                <div class="error-suggestion-box">
+                  <h5><i data-lucide="check-circle-2"></i> How to fix this:</h5>
+                  <p id="error-suggestion">Hold camera steady, tap screen to focus on the leaf, and ensure good lighting.</p>
+                </div>
+
+                <div class="error-actions-row">
+                  <button type="button" class="btn btn-primary" id="btn-error-retry">
+                    <i data-lucide="camera"></i>
+                    <span>Retake / Try Another Photo</span>
+                  </button>
+                  <button type="button" class="btn btn-ghost" id="btn-error-override" title="Force diagnostic model on this low-quality photo anyway">
+                    <span>Force Analyze Anyway</span>
+                    <i data-lucide="chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Active Diagnostic Results Card -->
+              <div class="results-active-state hidden" id="results-active">
+                
+                <!-- Primary Pathology Card -->
+                <div class="outcome-card" id="outcome-card">
+                  <div class="outcome-main">
+                    <div class="outcome-info">
+                      <div class="crop-badge" id="res-crop-badge">Tomato</div>
+                      <h3 class="res-disease-name" id="res-disease-name">Early Blight</h3>
+                      <p class="res-scientific" id="res-scientific">Alternaria solani</p>
+                      <div class="res-badges-row">
+                        <span class="badge" id="res-status-badge">Pathology Detected</span>
+                        <span class="badge badge-severity" id="res-severity-badge">Moderate Severity</span>
+                      </div>
+                    </div>
+
+                    <!-- Circular Confidence Meter -->
+                    <div class="confidence-meter-container">
+                      <div class="circular-meter">
+                        <svg class="meter-svg" viewBox="0 0 100 100">
+                          <circle class="meter-bg" cx="50" cy="50" r="42"></circle>
+                          <circle class="meter-stroke" id="meter-stroke" cx="50" cy="50" r="42"></circle>
+                        </svg>
+                        <div class="meter-inner">
+                          <span class="meter-number" id="meter-score">95.8%</span>
+                          <span class="meter-caption">Confidence</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Pathogen Info Bar -->
+                  <div class="pathogen-bar">
+                    <i data-lucide="microscope" class="pathogen-icon"></i>
+                    <span id="res-pathogen-info"><strong>Pathogen:</strong> Alternaria solani (Fungus)</span>
+                  </div>
+
+                  <!-- Probability Breakdown (Softmax Candidates) -->
+                  <div class="candidate-predictions">
+                    <h5 class="candidate-title">Top Classification Probabilities</h5>
+                    <div class="candidate-list" id="candidate-list">
+                      <!-- Rendered dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Model Limitation & Uncertainty Notice -->
+                  <div class="certainty-alert">
+                    <i data-lucide="help-circle" class="alert-icon"></i>
+                    <p id="res-certainty-text">
+                      <strong>Diagnostic Limitation Notice:</strong> Model predictions are probabilistic estimates (not 100% certain). Results depend on illumination, leaf orientation, focus sharpness, and the supported crop library.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Educational Prevention & Cultural Management -->
+                <div class="prevention-card">
+                  <div class="prevention-header">
+                    <div class="prevention-title-box">
+                      <i data-lucide="shield-check" class="prevention-icon"></i>
+                      <h4>General Prevention & Management</h4>
+                    </div>
+                    <span class="badge badge-edu">Educational Guidance</span>
+                  </div>
+
+                  <p class="prevention-disclaimer">
+                    The cultural practices and organic suggestions below are educational references. Always follow local agricultural extension and EPA label instructions before applying treatments.
+                  </p>
+
+                  <!-- Prevention Accordion / Sections -->
+                  <div class="prevention-tabs-container">
+                    <div class="guidance-section">
+                      <h5><i data-lucide="eye" class="section-icon"></i> Key Visual Symptoms</h5>
+                      <ul class="symptoms-list" id="res-symptoms-list">
+                        <!-- Rendered dynamically -->
+                      </ul>
+                    </div>
+
+                    <div class="guidance-section">
+                      <h5><i data-lucide="sprout" class="section-icon"></i> Cultural & Agronomic Practices</h5>
+                      <ul class="prevention-list" id="res-cultural-list">
+                        <!-- Rendered dynamically -->
+                      </ul>
+                    </div>
+
+                    <div class="guidance-section">
+                      <h5><i data-lucide="leaf" class="section-icon"></i> Biological & Organic Options</h5>
+                      <ul class="prevention-list" id="res-biological-list">
+                        <!-- Rendered dynamically -->
+                      </ul>
+                    </div>
+
+                    <div class="guidance-section">
+                      <h5><i data-lucide="sparkles" class="section-icon"></i> Field Sanitation & Hygiene</h5>
+                      <ul class="prevention-list" id="res-sanitation-list">
+                        <!-- Rendered dynamically -->
+                      </ul>
+                    </div>
+                  </div>
+
+                  <!-- Bottom Action Buttons -->
+                  <div class="results-actions-bar">
+                    <button type="button" class="btn btn-outline" id="btn-save-history">
+                      <i data-lucide="bookmark"></i>
+                      <span>Save Diagnosis</span>
+                    </button>
+                    <button type="button" class="btn btn-ghost" id="btn-print-report">
+                      <i data-lucide="printer"></i>
+                      <span>Print Summary</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-new-diagnosis">
+                      <i data-lucide="plus"></i>
+                      <span>Analyze Another Leaf</span>
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: DEMO GALLERY & TEST SUITE ================= -->
+      <section id="tab-samples" class="tab-content">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <h2>Demonstration Samples & Quality Error Tests</h2>
+            <p>Try the application without uploading your own images. Click any specimen below to run immediate pathology diagnosis or simulate camera quality errors.</p>
+          </div>
+        </div>
+
+        <!-- Valid Samples Grid -->
+        <h3 class="sub-heading"><i data-lucide="images"></i> Verified Botanical Leaf Specimens</h3>
+        <div class="samples-grid" id="samples-gallery">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Error & Edge-Case Testing Lab -->
+        <div class="error-lab-card">
+          <div class="error-lab-header">
+            <div>
+              <h3 class="error-lab-title"><i data-lucide="alert-octagon"></i> Quality Validation & Error Rejection Lab</h3>
+              <p>Verify that the diagnostic pipeline properly detects and rejects out-of-focus photos, non-plant subjects, and undersized files with clear educational guidance.</p>
+            </div>
+            <span class="badge badge-warning">Quality Control Testing</span>
+          </div>
+
+          <div class="error-test-cards-grid" id="error-test-cards">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: DISEASE LIBRARY ================= -->
+      <section id="tab-library" class="tab-content">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <h2>Crop Disease & Pathology Encyclopedia</h2>
+            <p>Explore symptom guides, pathogen biology, and non-prescriptive cultural prevention techniques across all supported agricultural cultivars.</p>
+          </div>
+          
+          <!-- Crop Filter Pills -->
+          <div class="filter-pills" id="library-crop-filters">
+            <button class="filter-pill active" data-crop="all">All Crops</button>
+            <button class="filter-pill" data-crop="Tomato">Tomato</button>
+            <button class="filter-pill" data-crop="Potato">Potato</button>
+            <button class="filter-pill" data-crop="Corn (Maize)">Corn</button>
+            <button class="filter-pill" data-crop="Apple">Apple</button>
+            <button class="filter-pill" data-crop="Grape">Grape</button>
+          </div>
+        </div>
+
+        <!-- Encyclopedia Cards Grid -->
+        <div class="library-grid" id="library-cards-container">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: SCAN HISTORY ================= -->
+      <section id="tab-history" class="tab-content">
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <h2>Recent Diagnostic Scans</h2>
+            <p>Audit trail of all leaf analyses conducted in this session. Saved securely in your browser's local storage.</p>
+          </div>
+          
+          <div class="history-actions-group">
+            <button type="button" class="btn btn-sm btn-outline" id="btn-export-csv">
+              <i data-lucide="download"></i>
+              <span>Export CSV</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline" id="btn-export-json">
+              <i data-lucide="file-json"></i>
+              <span>Export JSON</span>
+            </button>
+            <button type="button" class="btn btn-sm btn-danger-ghost" id="btn-clear-history">
+              <i data-lucide="trash-2"></i>
+              <span>Clear History</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- History Summary Metrics -->
+        <div class="history-metrics-row">
+          <div class="h-stat-box">
+            <span class="h-stat-val" id="hist-total-count">0</span>
+            <span class="h-stat-lbl">Total Scans</span>
+          </div>
+          <div class="h-stat-box">
+            <span class="h-stat-val text-emerald" id="hist-healthy-count">0</span>
+            <span class="h-stat-lbl">Healthy Specimens</span>
+          </div>
+          <div class="h-stat-box">
+            <span class="h-stat-val text-amber" id="hist-diseased-count">0</span>
+            <span class="h-stat-lbl">Pathology Detected</span>
+          </div>
+          <div class="h-stat-box">
+            <span class="h-stat-val text-blue" id="hist-avg-confidence">0%</span>
+            <span class="h-stat-lbl">Avg Confidence</span>
+          </div>
+        </div>
+
+        <!-- History Items List Container -->
+        <div class="history-list-container" id="history-items-list">
+          <!-- Populated by JavaScript -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Camera Viewfinder Modal -->
+    <div class="modal-backdrop hidden" id="camera-modal">
+      <div class="modal-card camera-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <i data-lucide="camera" class="modal-icon"></i>
+            <h4>Live Plant Viewfinder</h4>
+          </div>
+          <button type="button" class="close-btn" id="btn-close-camera">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <div class="modal-body camera-body">
+          <div class="viewfinder-box">
+            <video id="camera-video" playsinline autoplay muted></video>
+            
+            <!-- Leaf Alignment Reticle Guide -->
+            <div class="leaf-alignment-guide">
+              <div class="reticle-oval">
+                <i data-lucide="leaf" class="guide-leaf-icon"></i>
+                <span class="reticle-caption">Center single leaf within frame</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer camera-footer">
+          <button type="button" class="btn btn-outline" id="btn-toggle-camera-facing" title="Switch between front and back camera">
+            <i data-lucide="flip-horizontal"></i>
+            <span>Flip Camera</span>
+          </button>
+          <button type="button" class="btn btn-primary btn-lg shutter-btn" id="btn-camera-shutter">
+            <i data-lucide="aperture"></i>
+            <span>Capture Specimen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Model Switcher Modal -->
+    <div class="modal-backdrop hidden" id="model-modal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <i data-lucide="cpu" class="modal-icon"></i>
+            <h4>Inference Model Architecture</h4>
+          </div>
+          <button type="button" class="close-btn" id="btn-close-model-modal">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Select which classification engine is utilized for leaf pathology evaluation:</p>
+          <div class="model-options-list" id="model-options-container">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Footer -->
+    <footer class="app-footer">
+      <div class="container footer-content">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <i data-lucide="sprout" class="footer-icon"></i>
+            <span class="footer-title">Crop Disease Detection</span>
+          </div>
+          <p class="footer-summary">
+            A modular computer-vision platform for agricultural plant leaf pathology diagnosis and educational prevention strategies.
+          </p>
+        </div>
+
+        <div class="footer-disclaimer-box">
+          <h6><i data-lucide="alert-circle"></i> Non-Certainty & Model Limitation Disclaimer</h6>
+          <p>
+            Machine learning predictions are probabilistic inferences and can yield false positives or false negatives. Real-world field accuracy is influenced by sunlight glare, camera resolution, motion blur, and non-supported pathogen strains. General prevention suggestions are published strictly for educational awareness and do NOT replace official agricultural extension directives or EPA-labeled chemical usage guidelines.
+          </p>
+        </div>
+
+        <div class="footer-bottom">
+          <span>&copy; Crop Disease Detection System. Designed with Vanilla Web Standards.</span>
+          <span class="footer-tags">Client-Side AI &bull; Mobile & Desktop Responsive</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

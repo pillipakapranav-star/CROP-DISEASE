@@ -1,0 +1,13 @@
+{
+  "name": "crop-disease-detection",
+  "version": "1.0.0",
+  "description": "AI-powered Crop Disease Detection web application with live camera capture, sample library, image quality validation, and educational prevention recommendations.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "lucide": "^1.16.0"
+  }
+}
